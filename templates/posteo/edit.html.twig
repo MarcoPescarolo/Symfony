@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Posteo{% endblock %}
+
+{% block body %}
+    <h1>Edit Posteo</h1>
+
+    {{ include('posteo/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_posteo_index') }}">back to list</a>
+
+    {{ include('posteo/_delete_form.html.twig') }}
+{% endblock %}

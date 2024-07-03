@@ -15,13 +15,16 @@ class Posteo
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?usuario $id_usuario = null;
+    private ?Usuario $id_usuario = null;
 
     #[ORM\Column(length: 150)]
     private ?string $titulo = null;
 
     #[ORM\Column(length: 500)]
     private ?string $descripcion = null;
+
+    #[ORM\OneToOne(mappedBy: 'id_posteo', cascade: ['persist', 'remove'])]
+    private ?Tag $tag = null;
 
     public function getId(): ?int
     {
@@ -60,6 +63,28 @@ class Posteo
     public function setDescripcion(string $descripcion): static
     {
         $this->descripcion = $descripcion;
+
+        return $this;
+    }
+
+    public function getTag(): ?Tag
+    {
+        return $this->tag;
+    }
+
+    public function setTag(?Tag $tag): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($tag === null && $this->tag !== null) {
+            $this->tag->setIdPosteo(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($tag !== null && $tag->getIdPosteo() !== $this) {
+            $tag->setIdPosteo($this);
+        }
+
+        $this->tag = $tag;
 
         return $this;
     }

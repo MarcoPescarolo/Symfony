@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Posteo{% endblock %}
+
+{% block body %}
+    <h1>Create new Posteo</h1>
+
+    {{ include('posteo/_form.html.twig') }}
+
+    <a href="{{ path('app_posteo_index') }}">back to list</a>
+{% endblock %}
