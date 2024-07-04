@@ -13,7 +13,7 @@ class Posteo
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(targetEntity: Usuario::class, inversedBy: 'posteos')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Usuario $id_usuario = null;
 
@@ -25,6 +25,11 @@ class Posteo
 
     #[ORM\OneToOne(mappedBy: 'id_posteo', cascade: ['persist', 'remove'])]
     private ?Tag $tag = null;
+
+    #[ORM\ManyToOne(inversedBy: 'posteos')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Categoria $categoria = null;
+
 
     public function getId(): ?int
     {
@@ -85,6 +90,18 @@ class Posteo
         }
 
         $this->tag = $tag;
+
+        return $this;
+    }
+
+    public function getCategoria(): ?Categoria
+    {
+        return $this->categoria;
+    }
+
+    public function setCategoria(?Categoria $categoria): static
+    {
+        $this->categoria = $categoria;
 
         return $this;
     }

@@ -30,6 +30,7 @@ class PosteoController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $posteo->setIdUsuario($this->getUser());
             $entityManager->persist($posteo);
             $entityManager->flush();
 
@@ -71,7 +72,7 @@ class PosteoController extends AbstractController
     #[Route('/{id}', name: 'app_posteo_delete', methods: ['POST'])]
     public function delete(Request $request, Posteo $posteo, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$posteo->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $posteo->getId(), $request->request->get('_token'))) {
             $entityManager->remove($posteo);
             $entityManager->flush();
         }
