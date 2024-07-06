@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\PosteoRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PosteoRepository::class)]
@@ -22,6 +23,9 @@ class Posteo
 
     #[ORM\Column(length: 500)]
     private ?string $descripcion = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $fecha_publicacion = null;
 
     public function getId(): ?int
     {
@@ -60,6 +64,18 @@ class Posteo
     public function setDescripcion(string $descripcion): static
     {
         $this->descripcion = $descripcion;
+
+        return $this;
+    }
+
+    public function getFechaPublicacion(): ?\DateTimeInterface
+    {
+        return $this->fecha_publicacion;
+    }
+
+    public function setFechaPublicacion(\DateTimeInterface $fecha_publicacion): static
+    {
+        $this->fecha_publicacion = $fecha_publicacion;
 
         return $this;
     }
