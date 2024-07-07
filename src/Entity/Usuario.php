@@ -3,62 +3,158 @@
 namespace App\Entity;
 
 use App\Repository\UsuarioRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UsuarioRepository::class)]
-class Usuario
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $Nombre = null;
+    #[ORM\Column(length: 180, unique: true)]
+    private ?string $email = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $Mail = null;
+    #[ORM\Column]
+    private array $roles = [];
 
-    #[ORM\Column(length: 255)]
-    private ?string $Contrasena = null;
+    /**
+     * @var string The hashed password
+     */
+    #[ORM\Column]
+    private ?string $password = null;
+
+    #[ORM\OneToMany(targetEntity: Posteo::class, mappedBy: 'usuario', orphanRemoval: true)]
+    private Collection $posteos;
+
+
+    public function __construct()
+    {
+        $this->posteos = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getNombre(): ?string
+    public function getEmail(): ?string
     {
-        return $this->Nombre;
+        return $this->email;
     }
 
-    public function setNombre(string $Nombre): static
+    public function setEmail(string $email): static
     {
-        $this->Nombre = $Nombre;
+        $this->email = $email;
 
         return $this;
     }
 
-    public function getMail(): ?string
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
     {
-        return $this->Mail;
+        return (string) $this->email;
     }
 
-    public function setMail(string $Mail): static
+    /**
+     * @deprecated since Symfony 5.3, use getUserIdentifier instead
+     */
+    public function getUsername(): string
     {
-        $this->Mail = $Mail;
+        return (string) $this->email;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
 
         return $this;
     }
 
-    public function getContrasena(): ?string
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): string
     {
-        return $this->Contrasena;
+        return $this->password;
     }
 
-    public function setContrasena(string $Contrasena): static
+    public function setPassword(string $password): static
     {
-        $this->Contrasena = $Contrasena;
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * Returning a salt is only needed, if you are not using a modern
+     * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
+     *
+     * @see UserInterface
+     */
+    public function getSalt(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials(): void
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+
+    /**
+     * @return Collection<int, Posteo>
+     */
+    public function getPosteos(): Collection
+    {
+        return $this->posteos;
+    }
+
+    public function addPosteo(Posteo $posteo): static
+    {
+        if (!$this->posteos->contains($posteo)) {
+            $this->posteos->add($posteo);
+            $posteo->setUsuario($this);
+        }
+
+        return $this;
+    }
+
+    public function removePosteo(Posteo $posteo): static
+    {
+        if ($this->posteos->removeElement($posteo)) {
+            // set the owning side to null (unless already changed)
+            if ($posteo->getUsuario() === $this) {
+                $posteo->setUsuario(null);
+            }
+        }
 
         return $this;
     }

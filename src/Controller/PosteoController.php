@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/posteo')]
@@ -23,14 +24,22 @@ class PosteoController extends AbstractController
     }
 
     #[Route('/new', name: 'app_posteo_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, Security $security): Response
     {
+        $user = $security->getUser();
+        if (!$user) {
+            // Redirect to login page if the user is not authenticated
+            $this->addFlash('error', 'You must be logged in to create a post.');
+            return $this->redirectToRoute('app_login');
+        }
+
+
         $posteo = new Posteo();
         $form = $this->createForm(PosteoType::class, $posteo);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $posteo->setIdUsuario($this->getUser());
+            $posteo->setUsuario($user);
             $entityManager->persist($posteo);
             $entityManager->flush();
 

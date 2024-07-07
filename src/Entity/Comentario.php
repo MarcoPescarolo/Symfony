@@ -13,13 +13,10 @@ class Comentario
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?usuario $id_usuario = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
-    private ?posteo $id_posteo = null;
+    private ?Posteo $id_posteo = null;
 
     #[ORM\Column(length: 500)]
     private ?string $descripcion = null;
@@ -29,24 +26,13 @@ class Comentario
         return $this->id;
     }
 
-    public function getIdUsuario(): ?usuario
-    {
-        return $this->id_usuario;
-    }
 
-    public function setIdUsuario(?usuario $id_usuario): static
-    {
-        $this->id_usuario = $id_usuario;
-
-        return $this;
-    }
-
-    public function getIdPosteo(): ?posteo
+    public function getIdPosteo(): ?Posteo
     {
         return $this->id_posteo;
     }
 
-    public function setIdPosteo(posteo $id_posteo): static
+    public function setIdPosteo(Posteo $id_posteo): static
     {
         $this->id_posteo = $id_posteo;
 

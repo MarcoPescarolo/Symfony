@@ -13,10 +13,6 @@ class Posteo
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: Usuario::class, inversedBy: 'posteos')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Usuario $id_usuario = null;
-
     #[ORM\Column(length: 150)]
     private ?string $titulo = null;
 
@@ -30,22 +26,14 @@ class Posteo
     #[ORM\JoinColumn(nullable: false)]
     private ?Categoria $categoria = null;
 
+    #[ORM\ManyToOne(inversedBy: 'posteos')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Usuario $usuario = null;
+
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getIdUsuario(): ?usuario
-    {
-        return $this->id_usuario;
-    }
-
-    public function setIdUsuario(?usuario $id_usuario): static
-    {
-        $this->id_usuario = $id_usuario;
-
-        return $this;
     }
 
     public function getTitulo(): ?string
@@ -102,6 +90,18 @@ class Posteo
     public function setCategoria(?Categoria $categoria): static
     {
         $this->categoria = $categoria;
+
+        return $this;
+    }
+
+    public function getUsuario(): ?Usuario
+    {
+        return $this->usuario;
+    }
+
+    public function setUsuario(?Usuario $usuario): static
+    {
+        $this->usuario = $usuario;
 
         return $this;
     }

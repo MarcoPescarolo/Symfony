@@ -12,10 +12,7 @@ class ComentarioType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('descripcion')
-            ->add('id_usuario')
-            ->add('id_posteo')
-        ;
+            ->add('descripcion');
     }
 
     public function configureOptions(OptionsResolver $resolver): void
