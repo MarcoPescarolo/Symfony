@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Comentario;
+use App\Entity\Posteo;
 use App\Form\ComentarioType;
 use App\Repository\ComentarioRepository;
+use App\Repository\PosteoRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,10 +24,16 @@ class ComentarioController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_comentario_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/new/{posteo_id}', name: 'app_comentario_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager, PosteoRepository $posteoRepository, int $posteo_id): Response
     {
+        $posteo = $posteoRepository->find($posteo_id);
+        if (!$posteo) {
+            throw $this->createNotFoundException('The post does not exist');
+        }
+
         $comentario = new Comentario();
+        $comentario->setIdPosteo($posteo);
         $form = $this->createForm(ComentarioType::class, $comentario);
         $form->handleRequest($request);
 
@@ -33,14 +41,16 @@ class ComentarioController extends AbstractController
             $entityManager->persist($comentario);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_comentario_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_posteo_show', ['id' => $posteo_id], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('comentario/new.html.twig', [
             'comentario' => $comentario,
             'form' => $form,
+            'posteo' => $posteo,
         ]);
     }
+
 
     #[Route('/{id}', name: 'app_comentario_show', methods: ['GET'])]
     public function show(Comentario $comentario): Response
