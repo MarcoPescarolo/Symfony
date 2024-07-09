@@ -11,6 +11,8 @@
                 <th>Id</th>
                 <th>Titulo</th>
                 <th>Descripcion</th>
+                <th>Tags</th>
+                <th>Categoria</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -20,6 +22,8 @@
                 <td>{{ posteo.id }}</td>
                 <td>{{ posteo.titulo }}</td>
                 <td>{{ posteo.descripcion }}</td>
+                <td>{{ posteo.tag ? posteo.tag.titulo : '' }}</td>
+                <td>{{ posteo.categoria}}</td>
                 <td>
                     <a href="{{ path('app_posteo_show', {'id': posteo.id}) }}">Ver</a>
                     <a href="{{ path('app_posteo_edit', {'id': posteo.id}) }}">Editar</a>

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Posteo;
 use App\Entity\Comentario;
+use App\Entity\Tag;
 use App\Form\PosteoType;
 use App\Form\ComentarioType;
 use App\Repository\PosteoRepository;
@@ -42,6 +43,14 @@ class PosteoController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $posteo->setUsuario($user);
+
+            $tagContent = $form->get('tag')->getData();
+            if ($tagContent) {
+                $tag = new Tag();
+                $tag->setTitulo($tagContent);
+                $entityManager->persist($tag);
+                $posteo->setTag($tag);
+            }
             $entityManager->persist($posteo);
             $entityManager->flush();
 
