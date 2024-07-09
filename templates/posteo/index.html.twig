@@ -11,6 +11,7 @@
                 <th>Id</th>
                 <th>Titulo</th>
                 <th>Descripcion</th>
+                <th>creado por</th>
                 <th>Tags</th>
                 <th>Categoria</th>
                 <th>Actions</th>
@@ -22,6 +23,7 @@
                 <td>{{ posteo.id }}</td>
                 <td>{{ posteo.titulo }}</td>
                 <td>{{ posteo.descripcion }}</td>
+                <td>{{ posteo.usuario.username }}</td>
                 <td>{{ posteo.tag ? posteo.tag.titulo : '' }}</td>
                 <td>{{ posteo.categoria}}</td>
                 <td>

@@ -37,6 +37,9 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Comentario::class, mappedBy: 'usuario')]
     private Collection $comentarios;
 
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $username = null;
+
 
     public function __construct()
     {
@@ -76,7 +79,7 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->email;
+        return (string) $this->username;
     }
 
     /**
@@ -189,6 +192,13 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
                 $comentario->setUsuario(null);
             }
         }
+
+        return $this;
+    }
+
+    public function setUsername(?string $username): static
+    {
+        $this->username = $username;
 
         return $this;
     }

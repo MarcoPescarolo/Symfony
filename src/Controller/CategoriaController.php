@@ -47,6 +47,7 @@ class CategoriaController extends AbstractController
     {
         return $this->render('categoria/show.html.twig', [
             'categorium' => $categorium,
+            'posteos' => $categorium->getPosteos(),
         ]);
     }
 
@@ -71,7 +72,7 @@ class CategoriaController extends AbstractController
     #[Route('/{id}', name: 'app_categoria_delete', methods: ['POST'])]
     public function delete(Request $request, Categoria $categorium, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$categorium->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $categorium->getId(), $request->request->get('_token'))) {
             $entityManager->remove($categorium);
             $entityManager->flush();
         }
