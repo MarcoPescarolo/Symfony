@@ -5,7 +5,9 @@ namespace App\Controller;
 use App\Entity\Comentario;
 use App\Form\ComentarioType;
 use App\Repository\ComentarioRepository;
+use App\Repository\PosteoRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,10 +24,27 @@ class ComentarioController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_comentario_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/new/{posteo_id}', name: 'app_comentario_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager, PosteoRepository $posteoRepository, int $posteo_id, Security $security): Response
     {
+        $posteo = $posteoRepository->find($posteo_id);
+        if (!$posteo) {
+            throw $this->createNotFoundException('The post does not exist');
+        }
+
         $comentario = new Comentario();
+        $comentario->setPosteo($posteo);
+
+        // Get the current user
+        $user = $security->getUser();
+        if (!$user) {
+            // Redirect to login if the user is not authenticated
+            return $this->redirectToRoute('app_login');
+        }
+
+        // Set the user for the comentario
+        $comentario->setUsuario($user);
+
         $form = $this->createForm(ComentarioType::class, $comentario);
         $form->handleRequest($request);
 
@@ -33,12 +52,13 @@ class ComentarioController extends AbstractController
             $entityManager->persist($comentario);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_comentario_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_posteo_show', ['id' => $posteo_id], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('comentario/new.html.twig', [
             'comentario' => $comentario,
             'form' => $form,
+            'posteo' => $posteo,
         ]);
     }
 
@@ -71,7 +91,7 @@ class ComentarioController extends AbstractController
     #[Route('/{id}', name: 'app_comentario_delete', methods: ['POST'])]
     public function delete(Request $request, Comentario $comentario, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$comentario->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $comentario->getId(), $request->request->get('_token'))) {
             $entityManager->remove($comentario);
             $entityManager->flush();
         }

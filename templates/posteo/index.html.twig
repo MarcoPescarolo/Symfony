@@ -11,7 +11,7 @@
                 <th>Id</th>
                 <th>Titulo</th>
                 <th>Descripcion</th>
-                <th>actions</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -21,17 +21,18 @@
                 <td>{{ posteo.titulo }}</td>
                 <td>{{ posteo.descripcion }}</td>
                 <td>
-                    <a href="{{ path('app_posteo_show', {'id': posteo.id}) }}">show</a>
-                    <a href="{{ path('app_posteo_edit', {'id': posteo.id}) }}">edit</a>
+                    <a href="{{ path('app_posteo_show', {'id': posteo.id}) }}">Ver</a>
+                    <a href="{{ path('app_posteo_edit', {'id': posteo.id}) }}">Editar</a>
+                    <a href="{{ path('app_comentario_new', {'posteo_id': posteo.id}) }}">Comentar</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="4">no records found</td>
+                <td colspan="4">no hay data</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_posteo_new') }}">Create new</a>
+    <a href="{{ path('app_posteo_new') }}">Crear un nuevo posteo</a>
 {% endblock %}

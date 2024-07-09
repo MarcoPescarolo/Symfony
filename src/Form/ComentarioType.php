@@ -6,13 +6,16 @@ use App\Entity\Comentario;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class ComentarioType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('descripcion');
+            ->add('descripcion', TextareaType::class, [
+                'label' => 'Comenta',
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

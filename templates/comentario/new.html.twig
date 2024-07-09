@@ -1,11 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Comentario{% endblock %}
+{% block title %}New Comentario for {{ posteo.titulo }}{% endblock %}
 
 {% block body %}
-    <h1>Create new Comentario</h1>
+    <h1>Crear un nuevo comentario para "{{ posteo.titulo }}"</h1>
 
-    {{ include('comentario/_form.html.twig') }}
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button class="btn">{{ button_label|default('Save') }}</button>
+    {{ form_end(form) }}
 
-    <a href="{{ path('app_comentario_index') }}">back to list</a>
+    <a href="{{ path('app_posteo_index') }}">Volver a la lista de posteos</a>
 {% endblock %}

@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Posteo;
+use App\Entity\Comentario;
 use App\Form\PosteoType;
+use App\Form\ComentarioType;
 use App\Repository\PosteoRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -53,10 +55,12 @@ class PosteoController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_posteo_show', methods: ['GET'])]
-    public function show(Posteo $posteo): Response
+    public function show(Posteo $posteo, EntityManagerInterface $entityManager): Response
     {
+        $comentarios = $entityManager->getRepository(Comentario::class)->findBy(['posteo' => $posteo]);
         return $this->render('posteo/show.html.twig', [
             'posteo' => $posteo,
+            'comentarios' => $comentarios
         ]);
     }
 

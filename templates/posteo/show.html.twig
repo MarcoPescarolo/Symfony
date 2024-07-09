@@ -19,12 +19,27 @@
                 <th>Descripcion</th>
                 <td>{{ posteo.descripcion }}</td>
             </tr>
+            <tr>
+                <th>Creado por</th>
+                <td>{{ posteo.usuario.email }}</td>
+            </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('app_posteo_index') }}">back to list</a>
+    <h2>Comentarios</h2>
+    {% if comentarios|length > 0 %}
+        <ul>
+        {% for comentario in comentarios %}
+            <li>
+                <strong>{{ comentario.usuario.email }}</strong>: {{ comentario.descripcion }}
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No hay comentarios para este posteo.</p>
+    {% endif %}
 
-    <a href="{{ path('app_posteo_edit', {'id': posteo.id}) }}">edit</a>
-
+    <a href="{{ path('app_posteo_index') }}">Volver a la lista de posteos</a>
+    <a href="{{ path('app_posteo_edit', {'id': posteo.id}) }}">Editar</a>
     {{ include('posteo/_delete_form.html.twig') }}
 {% endblock %}

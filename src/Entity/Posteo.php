@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PosteoRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PosteoRepository::class)]
@@ -29,6 +31,14 @@ class Posteo
     #[ORM\ManyToOne(inversedBy: 'posteos')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Usuario $usuario = null;
+
+    #[ORM\OneToMany(targetEntity: Comentario::class, mappedBy: 'posteo', orphanRemoval: true)]
+    private Collection $comentarios;
+
+    public function __construct()
+    {
+        $this->comentarios = new ArrayCollection();
+    }
 
 
     public function getId(): ?int
@@ -102,6 +112,36 @@ class Posteo
     public function setUsuario(?Usuario $usuario): static
     {
         $this->usuario = $usuario;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Comentario>
+     */
+    public function getComentarios(): Collection
+    {
+        return $this->comentarios;
+    }
+
+    public function addComentario(Comentario $comentario): static
+    {
+        if (!$this->comentarios->contains($comentario)) {
+            $this->comentarios->add($comentario);
+            $comentario->setPosteo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComentario(Comentario $comentario): static
+    {
+        if ($this->comentarios->removeElement($comentario)) {
+            // set the owning side to null (unless already changed)
+            if ($comentario->getPosteo() === $this) {
+                $comentario->setPosteo(null);
+            }
+        }
 
         return $this;
     }
