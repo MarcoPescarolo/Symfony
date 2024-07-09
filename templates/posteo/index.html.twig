@@ -3,27 +3,32 @@
 {% block title %}Posteo index{% endblock %}
 
 {% block body %}
-    <h1>Posteo index</h1>
+    <h1>Posteos</h1>
 
     <table class="table">
         <thead>
             <tr>
                 <th>Id</th>
+                <th>Usuario</th>
                 <th>Titulo</th>
                 <th>Descripcion</th>
+                <th>Categoria</th>
                 <th>Actions</th>
+                
             </tr>
         </thead>
         <tbody>
         {% for posteo in posteos %}
             <tr>
                 <td>{{ posteo.id }}</td>
+                <td>{{ posteo.usuario.Nombre }}</td>
                 <td>{{ posteo.titulo }}</td>
                 <td>{{ posteo.descripcion }}</td>
+                <td>{{ posteo.categoria.titulo }}</td>
                 <td>
-                    <a href="{{ path('app_posteo_show', {'id': posteo.id}) }}">show</a>
-                    <a href="{{ path('app_posteo_edit', {'id': posteo.id}) }}">edit</a>
-                    <a href="{{ path('app_comentario_new', {'posteo_id': posteo.id}) }}">Comment!</a>
+                    <a href="{{ path('app_posteo_show', {'id': posteo.id}) }}">Ver!</a>
+                    <a href="{{ path('app_posteo_edit', {'id': posteo.id}) }}">Editar!</a>
+                    <a href="{{ path('app_comentario_new', {'posteo_id': posteo.id}) }}">Comentar!</a>
                 </td>
             </tr>
         {% else %}
@@ -34,5 +39,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_posteo_new') }}">Create new</a>
+    <a href="{{ path('app_posteo_new') }}">Crear Posteo</a>
 {% endblock %}

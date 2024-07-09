@@ -34,6 +34,9 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Posteo::class, mappedBy: 'usuario', orphanRemoval: true)]
     private Collection $posteos;
 
+    #[ORM\Column(length: 50)]
+    private ?string $Nombre = null;
+
 
     public function __construct()
     {
@@ -155,6 +158,18 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
                 $posteo->setUsuario(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getNombre(): ?string
+    {
+        return $this->Nombre;
+    }
+
+    public function setNombre(string $Nombre): static
+    {
+        $this->Nombre = $Nombre;
 
         return $this;
     }
