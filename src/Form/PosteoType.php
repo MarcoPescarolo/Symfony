@@ -6,6 +6,7 @@ use App\Entity\Posteo;
 use App\Entity\Categoria;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -22,6 +23,16 @@ class PosteoType extends AbstractType
                 'choice_label' => 'titulo',
                 'placeholder' => 'Selecciona una categoría',
             ])
+            ->add('imageFile', VichImageType::class, [
+                'required' => false,
+                'allow_delete' => true,
+                'delete_label' => 'Delete image',
+                'download_uri' => true,
+                'image_uri' => true,
+                'asset_helper' => true,
+            ])
+
+
             ->add('tag', TextType::class, [
                 'mapped' => false,
                 'required' => false,

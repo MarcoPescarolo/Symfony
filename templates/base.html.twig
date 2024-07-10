@@ -23,11 +23,11 @@
         </a>
 
         <ul class="nav nav-pills">
-            <li class="nav-item"><a href="#" class="nav-link active" aria-current="page">Home</a></li>
-            <li class="nav-item"><a href="#" class="nav-link">Posts</a></li>
-            <li class="nav-item"><a href="#" class="nav-link">Comentarios</a></li>
-            <li class="nav-item"><a href="#" class="nav-link">Tags</a></li>
-            <li class="nav-item"><a href="#" class="nav-link">About</a></li>
+        <li class="nav-item"><a href="{{ path('app_home') }}" class="nav-link {% if app.request.attributes.get('_route') == 'app_home' %}active{% endif %}">Home</a></li>
+        <li class="nav-item"><a href="{{ path('app_posteo_index') }}" class="nav-link {% if app.request.attributes.get('_route') starts with 'app_posteo_' %}active{% endif %}">Posteos</a></li>
+        <li class="nav-item"><a href="{{ path('app_comentario_index') }}" class="nav-link {% if app.request.attributes.get('_route') starts with 'app_comentario_' %}active{% endif %}">Comentarios</a></li>
+        <li class="nav-item"><a href="{{ path('app_tag_index') }}" class="nav-link {% if app.request.attributes.get('_route') starts with 'app_tag_' %}active{% endif %}">Tags</a></li>
+        <li class="nav-item"><a href="#" >About</a></li>
         </ul>
         </header>
         </div>

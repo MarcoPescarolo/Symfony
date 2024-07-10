@@ -3,11 +3,15 @@
 namespace App\Entity;
 
 use App\Repository\PosteoRepository;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PosteoRepository::class)]
+#[Vich\Uploadable]
 class Posteo
 {
     #[ORM\Id]
@@ -35,11 +39,33 @@ class Posteo
     #[ORM\OneToMany(targetEntity: Comentario::class, mappedBy: 'posteo', orphanRemoval: true)]
     private Collection $comentarios;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $fecha = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $imagen = null;
+
+    #[Vich\UploadableField(mapping: 'posteo_images', fileNameProperty: 'imagen')]
+    private ?File $imageFile = null;
+
     public function __construct()
     {
         $this->comentarios = new ArrayCollection();
     }
 
+    public function setImageFile(?File $imageFile = null): void
+    {
+        $this->imageFile = $imageFile;
+
+        if (null !== $imageFile) {
+            $this->fecha = new \DateTimeImmutable();
+        }
+    }
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
 
     public function getId(): ?int
     {
@@ -142,6 +168,30 @@ class Posteo
                 $comentario->setPosteo(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getFecha(): ?\DateTimeInterface
+    {
+        return $this->fecha;
+    }
+
+    public function setFecha(\DateTimeInterface $fecha): static
+    {
+        $this->fecha = $fecha;
+
+        return $this;
+    }
+
+    public function getImagen(): ?string
+    {
+        return $this->imagen;
+    }
+
+    public function setImagen(?string $imagen): static
+    {
+        $this->imagen = $imagen;
 
         return $this;
     }

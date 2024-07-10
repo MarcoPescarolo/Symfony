@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Home{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1 class="mb-4">Ultimos Posteos</h1>
+    <div class="d-flex justify-content-center">
+        <div class="row row-cols-1 row-cols-md-2 g-4" style="max-width: 800px;">
+            {% for posteo in posteos %}
+                <div class="col">
+                    <div class="card h-100">
+                        {% if posteo.imagen %}
+                            <img src="{{ vich_uploader_asset(posteo, 'imageFile') }}" class="card-img-top" alt="{{ posteo.titulo }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ posteo.titulo }}</h5>
+                            <p class="card-text">{{ posteo.descripcion|slice(0, 100) ~ '...' }}</p>
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    Posted on {{ posteo.fecha|date('F j, Y') }} by {{ posteo.usuario.username }}
+                                </small>
+                            </p>
+                            <a href="{{ path('app_posteo_show', {'id': posteo.id}) }}" class="btn btn-primary">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

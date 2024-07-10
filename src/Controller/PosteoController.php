@@ -38,6 +38,7 @@ class PosteoController extends AbstractController
 
 
         $posteo = new Posteo();
+        $posteo->setFecha(new \DateTime()); // Set the current date and time
         $form = $this->createForm(PosteoType::class, $posteo);
         $form->handleRequest($request);
 
