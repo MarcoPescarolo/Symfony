@@ -46,6 +46,7 @@ class ComentarioController extends AbstractController
         $comentario->setUsuario($user);
 
         $form = $this->createForm(ComentarioType::class, $comentario);
+        $comentario->setFecha(new \DateTime()); // Set the current date and time
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

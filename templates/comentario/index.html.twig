@@ -9,7 +9,10 @@
         <thead>
             <tr>
                 <th>Id</th>
+                <th>Posteo_titulo</th>
                 <th>Descripcion</th>
+                <th>Usuario</th>
+                <th>fecha_comentario</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -17,7 +20,10 @@
         {% for comentario in comentarios %}
             <tr>
                 <td>{{ comentario.id }}</td>
+                <td>{{ comentario.posteo.titulo }}</td>
                 <td>{{ comentario.descripcion }}</td>
+                <td>{{ comentario.usuario.username }}</td>
+                <td>{{ comentario.fecha|date('F j, Y') }}</td>
                 <td>
                     <a href="{{ path('app_comentario_show', {'id': comentario.id}) }}">Ver</a>
                     <a href="{{ path('app_comentario_edit', {'id': comentario.id}) }}">Editar</a>

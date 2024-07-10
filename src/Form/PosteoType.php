@@ -8,6 +8,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
@@ -17,7 +18,7 @@ class PosteoType extends AbstractType
     {
         $builder
             ->add('titulo')
-            ->add('descripcion')
+            ->add('descripcion', TextareaType::class)
             ->add('categoria', EntityType::class, [
                 'class' => Categoria::class,
                 'choice_label' => 'titulo',
