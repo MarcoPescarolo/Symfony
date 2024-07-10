@@ -23,6 +23,9 @@
         </a>
 
         <ul class="nav nav-pills">
+        {% if app.user %}
+          Estas logeado como {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Cerrar Sesion</a>
+        {% endif %}
         <li class="nav-item"><a href="{{ path('app_home') }}" class="nav-link {% if app.request.attributes.get('_route') == 'app_home' %}active{% endif %}">Home</a></li>
         <li class="nav-item"><a href="{{ path('app_posteo_index') }}" class="nav-link {% if app.request.attributes.get('_route') starts with 'app_posteo_' %}active{% endif %}">Posteos</a></li>
         <li class="nav-item"><a href="{{ path('app_comentario_index') }}" class="nav-link {% if app.request.attributes.get('_route') starts with 'app_comentario_' %}active{% endif %}">Comentarios</a></li>

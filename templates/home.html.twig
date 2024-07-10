@@ -4,27 +4,51 @@
 
 {% block body %}
 <div class="container mt-4">
-    <h1 class="mb-4">Ultimos Posteos</h1>
+    <div class="text-center mb-4">
+        <h1>Ultimos Posteos</h1>
+    </div>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <form method="get" action="{{ path('app_home') }}">
+            <div class="input-group">
+                <select name="categoria" class="form-select" onchange="this.form.submit()">
+                    <option value="">Todas Las Categorias</option>
+                    {% for categoria in categorias %}
+                        <option value="{{ categoria.id }}" {% if selectedCategoria == categoria.id %}selected{% endif %}>
+                            {{ categoria.titulo }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-primary">Filtrar</button>
+            </div>
+        </form>
+    </div>
+        <a href="{{ path('app_posteo_new') }}">Crear un nuevo posteo</a>
     <div class="d-flex justify-content-center">
         <div class="row row-cols-1 row-cols-md-2 g-4" style="max-width: 800px;">
             {% for posteo in posteos %}
                 <div class="col">
                     <div class="card h-100">
                         {% if posteo.imagen %}
-                            <img src="{{ vich_uploader_asset(posteo, 'imageFile') }}" class="card-img-top" alt="{{ posteo.titulo }}">
+                            <img src="{{ asset('images/posteos/' ~ posteo.imagen) }}" class="card-img-top" alt="{{ posteo.titulo }}">
                         {% endif %}
                         <div class="card-body">
                             <h5 class="card-title">{{ posteo.titulo }}</h5>
                             <p class="card-text">{{ posteo.descripcion|slice(0, 100) ~ '...' }}</p>
                             <p class="card-text">
                                 <small class="text-muted">
-                                    Posted on {{ posteo.fecha|date('F j, Y') }} by {{ posteo.usuario.username }}
+                                    Posteado el {{ posteo.fecha|date('F j, Y') }} Por {{ posteo.usuario.username }}<br>
+                                    Tags: {{posteo.tag}}
                                 </small>
                             </p>
-                            <a href="{{ path('app_posteo_show', {'id': posteo.id}) }}" class="btn btn-primary">Read More</a>
+                            <a href="{{ path('app_posteo_show', {'id': posteo.id}) }}" class="btn btn-primary">Ver Mas</a>
                         </div>
                     </div>
+                    <a href="{{ path('app_comentario_new', {'posteo_id': posteo.id}) }}">Comentar</a>
                 </div>
+                {% else %}
+                    <div class="text-center mb-4">
+                    <h2>No hay posteos</h2>
+                    </div>
             {% endfor %}
         </div>
     </div>
